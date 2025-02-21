@@ -1,111 +1,61 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   pgdb:
     image: postgres:16
     container_name: pgdb
     environment:
-      POSTGRES_USER: admin_user   # Database username
-      POSTGRES_PASSWORD: admin_password  # Database password
-      POSTGRES_DB: ai_doctor_db  # Database name
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: admin/
     volumes:
-      - pgdata:/var/lib/postgresql/data  # Persistent data storage
+      - pgdata:/var/lib/postgresql/data
     networks:
-      - ai-network
-    ports:
-      - "5432:5432"  # Expose PostgreSQL port for inter-container communication
+      - mynetwork
 
-  # Authentication Service (Handles JWT Authentication)
-  auth:
+  api-service:
     build:
-      context: ./services/auth
-    container_name: services-auth
+      context: C:/Users/user/Desktop/ai-doctor-2/services/api
+    container_name: api
     ports:
-      - "8001:8001"  # Expose auth service port
+      - "8000:8000"
     env_file:
-      - ./services/auth/.env  # Environment variables for Auth service
+      - ./services/api/.env
     depends_on:
-      - pgdb  # Ensure database is ready first
-    environment:
-      HOST: pgdb  # Database hostname
+      - pgdb
     networks:
-      - ai-network
+      - mynetwork
 
-  # API Service (Handles CRUD for OPD, Card Room, Lab)
-  api:
+  ai-service:
     build:
-      context: ./services/api
-    container_name: services-api
+      context: C:/Users/user/Desktop/ai-doctor-2/services/ai
+    container_name: ai
     ports:
-      - "8002:8002"  # Expose API service port
+      - "8000:8000"
     env_file:
-      - ./services/api/.env  # Environment variables for API service
+      - ./services/ai/.env
     depends_on:
-      - pgdb  # Ensure database is ready
-    environment:
-      HOST: pgdb  # Database hostname
-      AUTH_SVC_ADDRESS: services-auth:8001  # Auth service address
+      - pgdb
     networks:
-      - ai-network
+      - mynetwork
 
-  # AI Service (Handles X-ray, MRI, and Symptom Analysis)
-  ai:
+  realtime-service:
     build:
-      context: ./services/ai
-    container_name: services-ai
+      context: C:/Users/user/Desktop/ai-doctor-2/services/realtime
+    container_name: realtime
     ports:
-      - "8003:8003"  # Expose AI service port
+      - "8000:8000"
     env_file:
-      - ./services/ai/.env  # Environment variables for AI service
+      - ./services/realtime/.env
     depends_on:
-      - pgdb  # Ensure database is ready
-    environment:
-      HOST: pgdb  # Database hostname
-      AUTH_SVC_ADDRESS: services-auth:8001  # Auth service address
+      - pgdb
     networks:
-      - ai-network
+      - mynetwork
 
-  # Real-time Notifications (Handles WebSocket Communication for UI updates)
-  realtime:
-    build:
-      context: ./services/realtime
-    container_name: services-realtime
-    ports:
-      - "8004:8004"  # Expose Real-time service port
-    env_file:
-      - ./services/realtime/.env  # Environment variables for Real-time service
-    depends_on:
-      - pgdb  # Ensure database is ready
-    environment:
-      AUTH_SVC_ADDRESS: services-auth:8001  # Auth service address
-    networks:
-      - ai-network
 
-  # Frontend UI (React App for User Interface)
-  frontend:
-    build:
-      context: ./frontend
-    container_name: services-frontend
-    ports:
-      - "8005:8005"  # Expose Frontend UI port
-    env_file:
-      - ./frontend/.env  # Environment variables for frontend
-    networks:
-      - ai-network
-    depends_on:
-      - api  # API service should be ready
-      - ai  # AI service should be ready
-      - realtime  # Real-time service should be ready
-      - auth  # Auth service should be ready
 
-# Network Configuration (All services communicate over this network)
 networks:
-  ai-network:
-    driver: bridge  # Use bridge network mode for inter-service communication
+  mynetwork:
+    driver: bridge
 
-# Persistent Volume for Database Data
 volumes:
   pgdata:
-    external:
-      name: ai_doctor_pgdata  # External volume to persist data
