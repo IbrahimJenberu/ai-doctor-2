@@ -30,3 +30,4 @@ CREATE TABLE appointments (
     status VARCHAR(20) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+--
