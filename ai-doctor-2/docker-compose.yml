@@ -6,11 +6,25 @@ services:
     container_name: pgdb
     environment:
       POSTGRES_USER: auth_user
-      POSTGRES_PASSWORD: admin/
+      POSTGRES_PASSWORD: admin123 # Fixed password
+      POSTGRES_DB: ai_doctor_db
+    ports:
+      - "5432:5432" # Expose PostgreSQL
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - mynetwork
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - pgdb
+
 
   api-service:
     build:
@@ -50,6 +64,8 @@ services:
       - pgdb
     networks:
       - mynetwork
+
+
 
 networks:
   mynetwork:
