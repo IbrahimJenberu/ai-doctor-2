@@ -1,7 +1,7 @@
 -- Ensure the database and user are created
 CREATE DATABASE ai_doctor_db;
-CREATE USER ai_doctor_user WITH ENCRYPTED PASSWORD 'securepassword';
-GRANT ALL PRIVILEGES ON DATABASE ai_doctor_db TO ai_doctor_user;
+CREATE USER auth_user WITH ENCRYPTED PASSWORD 'admin123';
+GRANT ALL PRIVILEGES ON DATABASE ai_doctor_db TO auth_user;
 
 -- Create the patients table
 CREATE TABLE IF NOT EXISTS patients (
