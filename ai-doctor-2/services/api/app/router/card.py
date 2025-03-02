@@ -17,6 +17,7 @@ async def add_patient(patient: PatientCreate):
 
 @router.get("/patients/{patient_id}")
 async def fetch_patient(patient_id: int):
+    # Implement the logic to get patient information
     patient = await get_patient(patient_id)
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
