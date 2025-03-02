@@ -1,7 +1,7 @@
 from services.api.app.helper.db import get_db_connection
 from services.api.app.helper.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException
-
+#create new user
 async def create_user(username: str, password: str):
     hashed_pw = hash_password(password)
     query = """
