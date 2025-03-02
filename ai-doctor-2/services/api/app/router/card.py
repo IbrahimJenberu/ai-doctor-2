@@ -12,6 +12,7 @@ async def get_card_info():
 
 @router.post("/patients/")
 async def add_patient(patient: PatientCreate):
+    # Implement the logic to create patient information
     return await create_patient(patient.first_name, patient.last_name, patient.dob, patient.gender)
 
 @router.get("/patients/{patient_id}")
