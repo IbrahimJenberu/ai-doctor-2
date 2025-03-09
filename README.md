@@ -30,6 +30,6 @@ To set up the project on your local machine:
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/Abellegese/ai-hms.git
+git clone https://github.com/IbrahimJenberu/ai-doctor-2.git
 ```
 Load anduse it in Microsoft Visual Studio. Boom!!
