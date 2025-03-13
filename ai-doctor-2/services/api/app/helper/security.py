@@ -1,58 +1,42 @@
-import os
-import jwt
-import bcrypt
-import datetime
-from dotenv import load_dotenv
-from fastapi import HTTPException, Security, Depends
+from typing import List
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from pydantic import BaseModel
+from helper.auth_helper import verify_token
+from helper.db import fetch_user_by_id
 
-# Load environment variables
-load_dotenv()
+# OAuth2 scheme for token authentication
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-# Secret key & Algorithm
-SECRET_KEY = os.getenv("SECRET_KEY", "admin123")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+# Define roles
+ROLES = {
+    "doctor": ["view_patients", "request_lab", "analyze_ai_results"],
+    "lab_technician": ["process_lab_tests", "upload_results"],
+    "card_room_worker": ["register_patient", "update_status", "assign_doctor"]
+}
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+class TokenData(BaseModel):
+    user_id: str
+    role: str
 
-def hash_password(password: str) -> str:
-    """
-    Hashes a password using bcrypt.
-    """
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """
-    Verifies if the provided password matches the stored hash.
-    """
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-def create_access_token(data: dict, expires_delta: int = ACCESS_TOKEN_EXPIRE_MINUTES):
-    """
-    Generates a JWT access token with an expiration time.
-    """
-    to_encode = data.copy()
-    expire = datetime.datetime.utcnow() + datetime.timedelta(minutes=expires_delta)
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-def verify_access_token(token: str):
-    """
-    Decodes and verifies a JWT access token.
-    """
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    """Decode and verify JWT token, then return user info."""
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        payload = verify_token(token)
+        user_id: str = payload.get("sub")
+        role: str = payload.get("role")
+        if not user_id or not role:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        return TokenData(user_id=user_id, role=role)
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
-def get_current_user(token: str = Security(oauth2_scheme)):
-    """
-    Retrieves user information from the JWT token.
-    """
-    payload = verify_access_token(token)
-    return payload
+def check_role(required_permissions: List[str]):
+    """Dependency to enforce role-based access control (RBAC)."""
+    def role_dependency(user: TokenData = Depends(get_current_user)):
+        user_permissions = ROLES.get(user.role, [])
+        if not any(permission in user_permissions for permission in required_permissions):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
+        return user
+    return role_dependency
