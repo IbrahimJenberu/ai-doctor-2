@@ -21,3 +21,14 @@ async def init_db():
         );
     """)
     await conn.close()
+
+async def add_notification(event_type: str, event_data: str):
+    """
+    Inserts a new notification into the database.
+    """
+    conn = await asyncpg.connect(DATABASE_URL)
+    await conn.execute(
+        "INSERT INTO notifications (event_type, event_data) VALUES ($1, $2);",
+        event_type, event_data
+    )
+    await conn.close()
