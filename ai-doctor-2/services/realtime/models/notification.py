@@ -32,3 +32,12 @@ async def add_notification(event_type: str, event_data: str):
         event_type, event_data
     )
     await conn.close()
+
+async def get_notifications():
+    """
+    Fetches all notifications from the database.
+    """
+    conn = await asyncpg.connect(DATABASE_URL)
+    notifications = await conn.fetch("SELECT * FROM notifications;")
+    await conn.close()
+    return notifications
