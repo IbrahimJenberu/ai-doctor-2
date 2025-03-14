@@ -50,7 +50,6 @@ async def analyze_brain_mri(patient_id: int, image_url: str):
     result = {"top_diagnoses": ["Glioblastoma", "Meningioma"], "probabilities": [70, 30]}
     return {"patient_id": patient_id, "mri_analysis": result}
 
-
 @router.post("/analyze_chest_xray", dependencies=[Depends(check_role("analyze_xray"))])
 async def analyze_chest_xray(patient_id: int, image_url: str):
     """Send Chest X-ray to AI Analyzer and return disease probability."""
@@ -93,4 +92,3 @@ async def generate_medical_report(patient_id: int):
         "summary": "Patient shows symptoms of Pneumonia. AI models confirm chest abnormalities."
     }
     return {"medical_report": report}
-
