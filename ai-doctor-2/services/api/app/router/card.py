@@ -22,3 +22,40 @@ async def register_patient(first_name: str, last_name: str, age: int, phone: Opt
         )
     
     return {"message": "Patient successfully registered"}
+
+@router.get("/card/patients", dependencies=[Depends(check_role("view_patients"))])
+async def filter_patients(patient_id: Optional[int] = None, name: Optional[str] = None):
+    """
+    Retrieve patient details by ID or name.
+    If both parameters are provided, ID is prioritized.
+    """
+    query = "SELECT * FROM patients"
+    params = []
+    
+    if patient_id:
+        query += " WHERE id=$1"
+        params.append(patient_id)
+    elif name:
+        query += " WHERE first_name ILIKE $1 OR last_name ILIKE $1"
+        params.append(f"%{name}%")
+    
+    async with database.acquire() as conn:
+        patients = await conn.fetch(query, *params) if params else await conn.fetch(query)
+    
+    return {"patients": [dict(p) for p in patients]}
+
+@router.post("/card/assign_patient", dependencies=[Depends(check_role("assign_opd"))])
+async def assign_patient_to_opd(patient_id: int):
+    """
+    Assign a patient to the OPD Room for medical examination.
+    Ensures the patient exists before assignment.
+    """
+    async with database.acquire() as conn:
+        patient = await conn.fetchrow("SELECT * FROM patients WHERE id=$1", patient_id)
+        if not patient:
+            raise HTTPException(status_code=404, detail="Patient not found")
+        
+        # Update patient status to 'Assigned to OPD'
+        await conn.execute("UPDATE patients SET status='Assigned to OPD' WHERE id=$1", patient_id)
+    
+    return {"message": "Patient assigned to OPD successfully"}
