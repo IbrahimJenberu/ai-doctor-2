@@ -24,7 +24,6 @@ async def view_lab_requests(status: Optional[str] = Query(None, description="Fil
     
     return {"lab_requests": [dict(r) for r in requests]}
 
-
 @router.post("/lab/process_result", dependencies=[Depends(check_role("process_tests"))])
 async def process_lab_result(patient_id: int, test_type: str, test_result: str):
     """
@@ -60,6 +59,4 @@ async def get_lab_results(patient_id: int):
             raise HTTPException(status_code=404, detail="No lab results found for this patient")
     
     return {"lab_results": [dict(r) for r in results]}
-
-
 
