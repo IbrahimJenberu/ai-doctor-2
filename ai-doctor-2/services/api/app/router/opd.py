@@ -49,3 +49,31 @@ async def analyze_brain_mri(patient_id: int, image_url: str):
     # Call AI model microservice (simulated response)
     result = {"top_diagnoses": ["Glioblastoma", "Meningioma"], "probabilities": [70, 30]}
     return {"patient_id": patient_id, "mri_analysis": result}
+
+
+@router.post("/analyze_chest_xray", dependencies=[Depends(check_role("analyze_xray"))])
+async def analyze_chest_xray(patient_id: int, image_url: str):
+    """Send Chest X-ray to AI Analyzer and return disease probability."""
+    # Call AI model microservice (simulated response)
+    result = {"disease": "Pneumonia", "probability": 92.1}
+    return {"patient_id": patient_id, "xray_analysis": result}
+
+# Lab Test Requests & Results
+@router.post("/request_lab_test", dependencies=[Depends(check_role("send_lab_requests"))])
+async def send_lab_test_request(patient_id: int, test_type: str):
+    """Send lab test request to Lab Room."""
+    async with database.acquire() as conn:
+        await conn.execute(
+            "INSERT INTO lab_requests (patient_id, test_type, status) VALUES ($1, $2, 'Pending')",
+            patient_id, test_type
+        )
+    return {"message": "Lab test request sent"}
+
+@router.get("/receive_lab_results/{patient_id}", dependencies=[Depends(check_role("receive_lab_results"))])
+async def receive_lab_results(patient_id: int):
+    """Retrieve lab test results for a patient."""
+    async with database.acquire() as conn:
+        results = await conn.fetch("SELECT * FROM lab_results WHERE patient_id=$1", patient_id)
+    if not results:
+        raise HTTPException(status_code=404, detail="No lab results found")
+    return {"lab_results": [dict(r) for r in results]}
