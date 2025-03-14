@@ -81,4 +81,3 @@ async def schedule_appointment(patient_id: int, doctor_id: int, date: str):
         )
     
     return {"message": "Appointment scheduled successfully"}
-
