@@ -59,3 +59,26 @@ async def assign_patient_to_opd(patient_id: int):
         await conn.execute("UPDATE patients SET status='Assigned to OPD' WHERE id=$1", patient_id)
     
     return {"message": "Patient assigned to OPD successfully"}
+
+@router.post("/card/schedule_appointment", dependencies=[Depends(check_role("schedule_appointment"))])
+async def schedule_appointment(patient_id: int, doctor_id: int, date: str):
+    """
+    Schedule an appointment for a patient with a specific doctor.
+    Ensures valid patient and doctor IDs before scheduling.
+    """
+    async with database.acquire() as conn:
+        patient = await conn.fetchrow("SELECT id FROM patients WHERE id=$1", patient_id)
+        doctor = await conn.fetchrow("SELECT id FROM doctors WHERE id=$1", doctor_id)
+        if not patient:
+            raise HTTPException(status_code=404, detail="Patient not found")
+        if not doctor:
+            raise HTTPException(status_code=404, detail="Doctor not found")
+        
+        # Insert appointment into the database
+        await conn.execute(
+            "INSERT INTO appointments (patient_id, doctor_id, date, status) VALUES ($1, $2, $3, 'Scheduled')",
+            patient_id, doctor_id, date
+        )
+    
+    return {"message": "Appointment scheduled successfully"}
+
