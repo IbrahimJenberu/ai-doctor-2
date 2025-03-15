@@ -21,7 +21,6 @@ class Database:
         if cls.pool is None:
             cls.pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10)
 
-
     @classmethod
     async def disconnect(cls):
         """Close the connection pool."""
@@ -55,5 +54,3 @@ async def lifespan(app):
     await Database.connect()
     yield
     await Database.disconnect()
-
-
