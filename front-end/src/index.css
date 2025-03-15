@@ -1,0 +1,34 @@
+body{
+  font-family: arial;
+
+}
+.navbar{
+  background-color:rgb(241, 242, 243);;
+}
+.wrapper{
+  height: 100vh;
+}
+.login{
+width: 450px;
+height: min-content;
+border-radius: 5px;
+
+background-color: rgb(255, 255, 255);
+box-shadow:7px 6px 8px 0px rgba(0, 0,0, 0.2)
+}
+.loginpage{
+  background-color: rgb(241, 242, 243);
+}
+.toplogin{
+  background-color: #0785c4;
+  border-radius: 10px 10px 0 0;
+}
+.toplogin p  {
+  color:#F5F5F5;
+}
+.toplogin h3{
+  color:rgb(10, 214, 10);
+}
+.lowerlogin{
+  padding: 20px 30px;
+}
