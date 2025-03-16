@@ -1,36 +1,20 @@
-# realtime/app/helper/websocket.py
-from fastapi import WebSocket, WebSocketDisconnect
-import asyncio
+from fastapi import WebSocket
+from typing import Dict
 
 class ConnectionManager:
-    """
-    Manages active WebSocket connections.
-    """
     def __init__(self):
-        self.active_connections = []  # Store connected clients
+        self.active_connections: Dict[int, WebSocket] = {}
 
-    async def connect(self, websocket: WebSocket):
-        """
-        Accepts a WebSocket connection and adds it to the list.
-        """
+    async def connect(self, websocket: WebSocket, user_id: int):
         await websocket.accept()
-        self.active_connections.append(websocket)
+        self.active_connections[user_id] = websocket
 
-    def disconnect(self, websocket: WebSocket):
-        """
-        Removes a WebSocket connection when disconnected.
-        """
-        self.active_connections.remove(websocket)
+    async def disconnect(self, user_id: int):
+        self.active_connections.pop(user_id, None)
 
-    async def broadcast(self, message: str):
-        """
-        Sends a message to all connected clients.
-        """
-        for connection in self.active_connections:
-            try:
-                await connection.send_text(message)
-            except WebSocketDisconnect:
-                self.disconnect(connection)
+    async def send_notification(self, user_id: int, message: dict):
+        websocket = self.active_connections.get(user_id)
+        if websocket:
+            await websocket.send_json(message)
 
-# Instantiate the connection manager
 manager = ConnectionManager()
