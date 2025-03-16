@@ -1,14 +1,12 @@
-# realtime/app/schema/notification_schema.py
 from pydantic import BaseModel
-from datetime import datetime
+from typing import List
+from models.notification import Notification
 
-class NotificationCreate(BaseModel):
-    recipient_id: int
-    message: str
+class NotificationListResponse(BaseModel):
+    """Schema for returning a list of notifications"""
+    notifications: List[Notification]
 
 class NotificationResponse(BaseModel):
-    id: int
-    recipient_id: int
-    message: str
-    timestamp: datetime
-    is_read: bool
+    """Schema for an individual notification response"""
+    success: bool
+    notification: Notification
