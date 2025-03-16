@@ -1,1 +1,7 @@
-#This will holde all requirements or dependencies 
+# realtime/requirements.txt
+fastapi
+uvicorn
+firebase-admin
+asyncpg
+sqlalchemy
+redis
