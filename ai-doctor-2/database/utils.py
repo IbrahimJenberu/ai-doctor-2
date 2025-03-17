@@ -1,16 +1,27 @@
 from database.connection import Database
 
-async def initialize_database():
-    pool = await Database.connect()
-    async with pool.acquire() as conn:
-        await conn.execute(open("database/migrations/001_init.sql").read())
-        await conn.execute(open("database/migrations/002_add_indexes.sql").read())
-    await pool.close()
+async def get_user_by_username(username: str):
+    """Retrieve user by username."""
+    query = "SELECT * FROM users WHERE username = $1"
+    return await Database.fetchrow(query, username)
 
-async def reset_database():
-    pool = await Database.connect()
-    async with pool.acquire() as conn:
-        await conn.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
-        await initialize_database()
-    await pool.close()
+async def register_patient(first_name: str, last_name: str, dob: str, gender: str, contact: str):
+    """Register a new patient."""
+    query = """
+        INSERT INTO patients (first_name, last_name, dob, gender, contact_info) 
+        VALUES ($1, $2, $3, $4, $5) RETURNING id
+    """
+    return await Database.fetchrow(query, first_name, last_name, dob, gender, contact)
 
+async def schedule_appointment(patient_id: str, doctor_id: str, date: str):
+    """Schedule a new appointment."""
+    query = """
+        INSERT INTO appointments (patient_id, doctor_id, appointment_date) 
+        VALUES ($1, $2, $3) RETURNING id
+    """
+    return await Database.fetchrow(query, patient_id, doctor_id, date)
+
+async def get_appointments_by_doctor(doctor_id: str):
+    """Retrieve appointments by doctor."""
+    query = "SELECT * FROM appointments WHERE doctor_id = $1"
+    return await Database.fetch(query, doctor_id)
