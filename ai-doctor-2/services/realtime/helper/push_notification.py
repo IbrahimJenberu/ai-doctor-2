@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 from app.helper.websocket import manager
 
-
 redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
 
 def send_push_notification(user_id: int, message: dict):
