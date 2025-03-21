@@ -50,4 +50,3 @@ async def mark_notification_as_read(conn: asyncpg.Connection, notification_id: i
     query = "UPDATE notifications SET read = true WHERE id = $1"
     await conn.execute(query, notification_id)
 
-
