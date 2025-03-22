@@ -37,4 +37,3 @@ class Database:
             return await conn.execute(query, *args)
 
 db = Database()
-
