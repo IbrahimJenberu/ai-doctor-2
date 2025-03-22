@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Forminput(props) {
+function Forminput() {
   return (
     <div className='form-group mb-2 '>
     <label htmlFor={props.type} className='form-label'>{props.label}</label>

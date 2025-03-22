@@ -1,11 +1,13 @@
 import React from 'react'
-import Forminput from './Forminput'
+import './Login.css'
 function Login() {
   return (
+
 <>  
 <nav class="navbar " >
   <div class="container">
-<a className='ms-auto'>  <i class="fa fa-home"  ></i>
+<a className='ms-auto' >  <Link to={"/src/Homepage.jsx"}><i class="fa fa-home"  ></i> </Link>
+
 </a>
   
   </div>
