@@ -1,10 +1,13 @@
 import React from 'react';
-import Gradientbtn from './Gradientbtn';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Navbar.css';
+import Gradientbtn from './Gradientbtn';
 
-function Navbar() {
+const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div className="container">
         <a className="navbar-brand text-primary fw-bold" href="#">
           ProDocAI
@@ -23,34 +26,38 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mx-auto">
             <li className="nav-item">
-              <a className="nav-link" href="index.html">
+              <NavLink to="/" className="nav-link">
                 Home
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="About.html">
+              <NavLink to="/About" className="nav-link">
                 About
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="Services.html">
+              <NavLink to="/Services" className="nav-link">
                 Services
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="Contact.html">
-                Contact
-              </a>
+              <NavLink to="/Contact" className="nav-link">
+                Contacts
+              </NavLink>
             </li>
           </ul>
-        <div className="d-flex align-items-center">
-          <Gradientbtn text="LOGIN" className=" d-lg-inline" />
+          <div className="d-flex align-items-center Login">
+            <button
+              onClick={() => navigate('/Login')}
+              className="d-lg-inline btn btn-primary px-4 py-2 rounded-pill fw-semibold"
+            >
+              LOGIN
+            </button>
+          </div>
         </div>
-        </div>
-
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

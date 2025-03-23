@@ -1,0 +1,15 @@
+
+.link{
+    text-decoration: none;
+color: aliceblue;
+
+}
+
+  
+  @media (max-width: 768px) {
+    .Gradientbtn {
+      font-size: 0.875rem; /* Smaller font for small screens */
+      padding: 0.4rem 0.8rem;
+    }
+  }
+  

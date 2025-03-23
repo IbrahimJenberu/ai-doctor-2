@@ -1,18 +1,21 @@
 import React from 'react'
 import './Login.css'
+import Forminput from '../components/Forminput'
+import { useNavigate } from 'react-router-dom'
 function Login() {
+  const navigate=useNavigate();
   return (
 
 <>  
 <nav class="navbar " >
   <div class="container">
-<a className='ms-auto' >  <Link to={"/src/Homepage.jsx"}><i class="fa fa-home"  ></i> </Link>
 
-</a>
-  
+  <i class="fa fa-home"  onClick={()=>navigate('/')}></i> 
+
   </div>
 </nav>
-<div className='loginpage wrapper d-flex align-items-center justify-content-center w-100'> 
+
+<div className='loginpage wrapper d-flex align-items-center justify-content-center w-200'> 
    <div className='login rounded'>
    
    <div class="toplogin">
@@ -33,8 +36,8 @@ function Login() {
             Failed to fetch
 </div>
 
-<Forminput type="email" feedback="Please Enter your Email" label="Email Address" />
-<Forminput type="password" label="password" feedback="Please Enter your password"/>
+<Forminput type="email" label="Email Address" feedback="Please Enter your Email" />
+<Forminput type="password" label="Password" feedback="Please Enter your password" />
 
 <div className='form-group mt-3'>
     <input type='checkbox'></input> 
@@ -47,8 +50,7 @@ function Login() {
 
    </div>
    </div>
-   </div> 
-
+   </div>
   </>
   )
 }

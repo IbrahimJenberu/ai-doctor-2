@@ -1,0 +1,24 @@
+body {
+  
+    margin: 0;
+    padding: 0;
+}
+.custom-card {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 12px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .custom-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .readmore{
+    background: linear-gradient(90deg, #0805ef, #28a6ef);
+  }

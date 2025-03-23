@@ -1,10 +1,10 @@
 import React from 'react'
-import Navbar from './Navbar'
-import Hero from './Hero'
+import Navbar from '../components/Navbar'
+import Hero from '../components/Hero'
 import './Homepage.css'
 function Homepage() {
   return (<>
-   <Navbar/>
+
    <Hero/>
   </>
 
