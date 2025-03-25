@@ -1,0 +1,113 @@
+/* General Styles */
+.services {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Poppins', sans-serif;
+    background:  url('https://www.transparenttextures.com/patterns/hexellence.png');
+  background-color: rgba(0, 85, 255, 0.1);
+}
+
+
+
+
+
+
+
+.departments{
+padding-top: 20px;
+    text-align: center;
+}
+.departments h5 {
+    color: #5A89E6;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.departments h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.departments p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card .icon {
+    font-size: 50px;
+    color: #5A89E6;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.card p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card ul li {
+    font-size: 14px;
+    color: #5A89E6;
+    text-decoration: none;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card ul li i {
+    margin-right: 8px;
+    color: #5A89E6;
+}
+.card img{
+    width: 50px;
+}
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

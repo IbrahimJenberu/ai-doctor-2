@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import './Contact.css'
 const Contactpage = () => {
   return (
     <div className="container py-5">
@@ -17,7 +17,7 @@ const Contactpage = () => {
         </div>
         
         {/* Right Section (Form) */}
-        <div className="col-md-5 p-5 bg-dark text-white rounded shadow-lg" style={{ minHeight: '550px' }}>
+        <div className="contact-form col-md-5 p-5  text-white rounded shadow-lg" style={{ minHeight: '550px' }}>
           <h3 className="fw-semibold mb-3">Please fill this form</h3>
           <form>
             <div className="mb-3">
