@@ -12,5 +12,3 @@ CREATE TABLE IF NOT EXISTS patients (
     gender VARCHAR(10),
     phone_number VARCHAR(15)
 );
-
-
